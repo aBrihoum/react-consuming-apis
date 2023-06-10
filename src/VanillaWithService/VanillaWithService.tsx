@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { CanceledError } from "./services/api-client";
 import UserService, { UserT } from "./services/user-service";
-export default function VanillaOrganized() {
+export default function VanillaWithService() {
   const [users, setUsers] = useState<UserT[]>([]);
   const [originalUsers, setOriginalUsers] = useState<UserT[]>([]);
   const [error, setError] = useState("");
@@ -32,6 +32,7 @@ export default function VanillaOrganized() {
         setUsers(originalUsers);
       });
   };
+
   useEffect(() => {
     setLoading(true);
     const { request, abort } = UserService.getAllUsers();
