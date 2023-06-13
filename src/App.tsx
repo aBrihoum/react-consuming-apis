@@ -1,9 +1,11 @@
-import VanillaUnorganized from "./VanillaUnorganized/VanillaUnorganized";
+import TodoForm from "./react-query/TodoForm";
+import TodosList from "./react-query/TodosList";
 
 function App() {
   return (
     <>
-      <VanillaUnorganized />
+      <TodoForm />
+      <TodosList />
     </>
   );
 }

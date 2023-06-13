@@ -33,3 +33,10 @@ body {
   display: block;
   margin: auto;
 }
+.hidden {
+  visibility: hidden;
+}
+.margin {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
