@@ -1,27 +1,24 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { TodoI } from "./useGetTodos";
-
-interface AddTodoContextI {
-  previousTodos: TodoI[];
-}
+import { useState } from "react";
 
 const useAddTodos = () => {
   // variables means : the input ( wsh dakhalna comme info w b3atna )
+  const [oldTodos, setOldTodos] = useState<TodoI[]>([]);
   const queryClient = useQueryClient();
-  return useMutation<TodoI, AxiosError, TodoI, AddTodoContextI>({
+  return useMutation<TodoI, AxiosError, TodoI>({
     mutationFn: (todo: TodoI) =>
       axios
         .post<TodoI>("https://jsonplaceholder.typicode.com/todos", todo)
         .then((res) => res.data),
 
     onMutate(sentTodo) {
-      const previousTodos = queryClient.getQueryData<TodoI[]>(["todos"]) || [];
+      setOldTodos(queryClient.getQueryData<TodoI[]>(["todos"]) || []);
       queryClient.setQueryData<TodoI[]>(["todos"], (oldTodos) => [
         sentTodo,
         ...(oldTodos || []),
       ]);
-      return { previousTodos };
     },
 
     onSuccess(receivedTodo, sentTodo) {
@@ -36,8 +33,8 @@ const useAddTodos = () => {
       });
     },
 
-    onError(error, sentTodo, context) {
-      queryClient.setQueryData<TodoI[]>(["todos"], context?.previousTodos);
+    onError() {
+      queryClient.setQueryData<TodoI[]>(["todos"], oldTodos);
     },
   });
 };
