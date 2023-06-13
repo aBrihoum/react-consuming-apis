@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
 import { TodoI } from "./useGetTodos";
 import { useState } from "react";
+import { CACHE_KEY_TODOS } from "../constants";
 
 const useAddTodos = () => {
   // variables means : the input ( wsh dakhalna comme info w b3atna )
@@ -14,8 +15,8 @@ const useAddTodos = () => {
         .then((res) => res.data),
 
     onMutate(sentTodo) {
-      setOldTodos(queryClient.getQueryData<TodoI[]>(["todos"]) || []);
-      queryClient.setQueryData<TodoI[]>(["todos"], (oldTodos) => [
+      setOldTodos(queryClient.getQueryData<TodoI[]>(CACHE_KEY_TODOS) || []);
+      queryClient.setQueryData<TodoI[]>(CACHE_KEY_TODOS, (oldTodos) => [
         sentTodo,
         ...(oldTodos || []),
       ]);
@@ -24,17 +25,17 @@ const useAddTodos = () => {
     onSuccess(receivedTodo, sentTodo) {
       // [-] Invalidating the cache (wont work with jsonplaceholder) :
       // queryClient.invalidateQueries({
-      //   queryKey: ["todos"],
+      //   queryKey: CACHE_KEY_TODOS,
       // });
       // [-] Updating the data of the cache :
-      queryClient.setQueryData<TodoI[]>(["todos"], (oldTodos) => {
+      queryClient.setQueryData<TodoI[]>(CACHE_KEY_TODOS, (oldTodos) => {
         const tmp = oldTodos?.filter((el) => el.id !== sentTodo.id);
         return [receivedTodo, ...(tmp || [])];
       });
     },
 
     onError() {
-      queryClient.setQueryData<TodoI[]>(["todos"], oldTodos);
+      queryClient.setQueryData<TodoI[]>(CACHE_KEY_TODOS, oldTodos);
     },
   });
 };

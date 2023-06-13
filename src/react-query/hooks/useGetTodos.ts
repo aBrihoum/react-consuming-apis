@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
+import { CACHE_KEY_TODOS } from "../constants";
 
 export interface TodoI {
   id: number;
@@ -9,7 +10,7 @@ export interface TodoI {
 }
 const useGetTodos = () => {
   return useQuery<TodoI[], AxiosError>({
-    queryKey: ["todos"],
+    queryKey: CACHE_KEY_TODOS,
     queryFn: () =>
       axios
         .get("https://jsonplaceholder.typicode.com/todos")

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios, { AxiosError } from "axios";
+import { CACHE_KEY_POSTS } from "../constants";
 
 interface Post {
   id: number;
@@ -16,7 +17,7 @@ interface PostsQuery {
 
 const useGetPosts = ({ page, pageSize, userId }: PostsQuery) => {
   return useQuery<Post[], AxiosError>({
-    queryKey: ["posts", userId, page, pageSize],
+    queryKey: [CACHE_KEY_POSTS, userId, page, pageSize],
     queryFn: () =>
       axios
         .get("https://jsonplaceholder.typicode.com/posts", {
