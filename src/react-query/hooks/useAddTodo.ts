@@ -3,16 +3,16 @@ import axios, { AxiosError } from "axios";
 import { TodoI } from "./useGetTodos";
 import { useState } from "react";
 import { CACHE_KEY_TODOS } from "../constants";
+import APIClient from "../services/apiClient";
+
+const apiClient = new APIClient<TodoI>("/todos");
 
 const useAddTodos = () => {
   // variables means : the input ( wsh dakhalna comme info w b3atna )
   const [oldTodos, setOldTodos] = useState<TodoI[]>([]);
   const queryClient = useQueryClient();
   return useMutation<TodoI, AxiosError, TodoI>({
-    mutationFn: (todo: TodoI) =>
-      axios
-        .post<TodoI>("https://jsonplaceholder.typicode.com/todos", todo)
-        .then((res) => res.data),
+    mutationFn: apiClient.post,
 
     onMutate(sentTodo) {
       setOldTodos(queryClient.getQueryData<TodoI[]>(CACHE_KEY_TODOS) || []);
