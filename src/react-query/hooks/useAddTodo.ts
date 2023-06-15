@@ -1,18 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosError } from "axios";
-import { TodoI } from "./useGetTodos";
 import { useState } from "react";
 import { CACHE_KEY_TODOS } from "../constants";
-import APIClient from "../services/apiClient";
-
-const apiClient = new APIClient<TodoI>("/todos");
+import todoService, { TodoI, AxiosError } from "../services/todoService";
 
 const useAddTodos = () => {
   // variables means : the input ( wsh dakhalna comme info w b3atna )
   const [oldTodos, setOldTodos] = useState<TodoI[]>([]);
   const queryClient = useQueryClient();
   return useMutation<TodoI, AxiosError, TodoI>({
-    mutationFn: apiClient.post,
+    mutationFn: todoService.post,
 
     onMutate(sentTodo) {
       setOldTodos(queryClient.getQueryData<TodoI[]>(CACHE_KEY_TODOS) || []);
